@@ -13,6 +13,22 @@
 ฟังก์ชันซูม/ขยายวิดีโอ ดูรายละเอียดชัดเจนมากขึ้นได้ตามต้องการ
 ใช้งานได้กับอุปกรณ์หลากหลาย รองรับสมาร์ทโฟน แท็บเล็ต คอมพิวเตอร์ ทีวี และอีกมากมาย">
     <title>Home</title>
+<script>
+    function gdprConfirmed() {
+        return true;
+    }
+    if (gdprConfirmed()) {
+    document.write("\
+    <!-- Google Tag Manager -->\
+    <gascript>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\
+    })(window,document,'script','dataLayer','GTM-NZQCV86D');</gascript>\
+    <!-- End Google Tag Manager -->\
+    ".replace(/gascript/g, 'script'));
+    }
+    </script>
     
 <link rel="stylesheet" href="index.css" media="screen">
     <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
@@ -43,48 +59,10 @@
 ฟังก์ชันซูม/ขยายวิดีโอ ดูรายละเอียดชัดเจนมากขึ้นได้ตามต้องการ
 ใช้งานได้กับอุปกรณ์หลากหลาย รองรับสมาร์ทโฟน แท็บเล็ต คอมพิวเตอร์ ทีวี และอีกมากมาย">
     <meta property="og:type" content="website">
-  <script>
-    (function() {
-    function gdprConfirmed() {
-        return true;
-    }
-
-    var added = false;
-    var currentScript = document.currentScript;
-
-    function insertHTML(html) {
-        var container = document.createElement('div');
-        container.innerHTML = html;
-        container.querySelectorAll('script').forEach(s => {
-            const ns = document.createElement('script');
-            ns.async = s.async;
-            if (s.src) {
-                ns.src = s.src;
-            } else {
-                ns.textContent = s.textContent;
-            }
-            s.replaceWith(ns);
-        });
-
-            var fragment = document.createDocumentFragment();
-            fragment.append(...container.childNodes);
-
-            if (currentScript && currentScript.parentNode) {
-                currentScript.after(fragment);
-            }
-    }
-            var gaBody = "<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=GT-K5224NZD"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'GT-K5224NZD');
-</script>
-";
-    </script><meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
-  <body data-home-page="Home.html" data-home-page-title="Home" data-path-to-root="./" data-include-products="false" class="u-body u-clearfix u-xl-mode" data-lang="en"><header class="u-black u-clearfix u-header u-header" id="header"><div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+  <meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
+  <body data-home-page="Home.html" data-home-page-title="Home" data-path-to-root="./" data-include-products="false" class="u-body u-clearfix u-xl-mode" data-lang="en"><!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NZQCV86D" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) --><header class="u-black u-clearfix u-header u-header" id="header"><div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
         <p class="u-custom-font u-font-lato u-text u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="2000" data-animation-delay="0">GO PREMIUM</p>
       </div></header>
     <section class="u-clearfix u-section-1" id="block-1">
