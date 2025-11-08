@@ -73,26 +73,16 @@
                 currentScript.after(fragment);
             }
     }
-
-    window._npAddGAnalytics = function () {
-        if (gdprConfirmed() && !added) {
             var gaBody = "<!-- Google tag (gtag.js) -->
-															<script async src="https://www.googletagmanager.com/gtag/js?id=GT-K5224NZD"></script>
-															<script>
-															  window.dataLayer = window.dataLayer || [];
-															  function gtag(){dataLayer.push(arguments);}
-															  gtag('js', new Date());
-															
-															  gtag('config', 'GT-K5224NZD');
-															</script>";
-            var replacedBody = gaBody.replace(/gascript/g, 'script');
-            insertHTML(replacedBody);
-            added = true;
-        }
-    }
+<script async src="https://www.googletagmanager.com/gtag/js?id=GT-K5224NZD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-    window._npAddGAnalytics();
-    })();
+  gtag('config', 'GT-K5224NZD');
+</script>
+";
     </script><meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
   <body data-home-page="Home.html" data-home-page-title="Home" data-path-to-root="./" data-include-products="false" class="u-body u-clearfix u-xl-mode" data-lang="en"><header class="u-black u-clearfix u-header u-header" id="header"><div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
         <p class="u-custom-font u-font-lato u-text u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="2000" data-animation-delay="0">GO PREMIUM</p>
