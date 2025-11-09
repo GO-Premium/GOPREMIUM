@@ -13,7 +13,170 @@
 ฟังก์ชันซูม/ขยายวิดีโอ ดูรายละเอียดชัดเจนมากขึ้นได้ตามต้องการ
 ใช้งานได้กับอุปกรณ์หลากหลาย รองรับสมาร์ทโฟน แท็บเล็ต คอมพิวเตอร์ ทีวี และอีกมากมาย">
     <title>GOPREMIUM</title>
-    
+
+<style>
+  html,body{
+    height:100%;
+    margin:0;
+    background: linear-gradient(#0b1726, #102a45 70%);
+    color:#fff;
+    font-family: Inter, sans-serif;
+  }
+
+  /* Canvas เป็นพื้นหลัง */
+  #snow-canvas{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+  }
+
+  .content{
+    position:relative;
+    z-index:1;
+    text-align:center;
+    padding-top:20vh;
+  }
+
+  h1{
+    font-size:2.2rem;
+    letter-spacing:1px;
+  }
+  p{
+    color:#dbeaf8;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    #snow-canvas{ display:none; }
+  }
+</style>
+</head>
+<body>
+<canvas id="snow-canvas"></canvas>
+
+<div class="content">
+  <h1>❄️ Snowflakes Falling Effect ❄️</h1>
+  <p>หิมะตกสวยงามด้วยภาพเกล็ดหิมะหลายแบบ</p>
+</div>
+
+<script>
+// ============ CONFIG ============ //
+const CONFIG = {
+  flakesCountFactor: 0.0008, // ความหนาแน่น (ยิ่งมากยิ่งหนาแน่น)
+  gravity: 0.02,             // ความเร็วตก
+  windVariation: 0.08,       // ความผันผวนของลม
+  maxSpeedY: 2.0,
+  images: [
+    "https://raw.githubusercontent.com/zelef69/assetcdn/main/snowflake1.png",
+    "https://raw.githubusercontent.com/zelef69/assetcdn/main/snowflake2.png",
+    "https://raw.githubusercontent.com/zelef69/assetcdn/main/snowflake3.png",
+    "https://raw.githubusercontent.com/zelef69/assetcdn/main/snowflake4.png",
+  ], // ลิงก์ภาพเกล็ดหิมะ PNG โปร่งใส (ใช้ของคุณเองได้)
+  minSize: 12,
+  maxSize: 48,
+};
+
+// ============ SCRIPT ============ //
+const canvas = document.getElementById("snow-canvas");
+const ctx = canvas.getContext("2d");
+let W = innerWidth;
+let H = innerHeight;
+canvas.width = W;
+canvas.height = H;
+
+let flakes = [];
+let imagesLoaded = 0;
+let snowImages = [];
+
+function resize(){
+  W = innerWidth;
+  H = innerHeight;
+  canvas.width = W;
+  canvas.height = H;
+  const targetCount = Math.round(W * H * CONFIG.flakesCountFactor);
+  while (flakes.length < targetCount) flakes.push(makeFlake());
+  if (flakes.length > targetCount) flakes.length = targetCount;
+}
+
+window.addEventListener("resize", ()=> setTimeout(resize, 150));
+
+function rand(min,max){ return Math.random() * (max-min) + min; }
+
+function makeFlake(){
+  const img = snowImages[Math.floor(Math.random()*snowImages.length)];
+  const size = rand(CONFIG.minSize, CONFIG.maxSize);
+  return {
+    x: rand(0, W),
+    y: rand(-H, H),
+    size,
+    speedY: rand(0.4, CONFIG.maxSpeedY),
+    rot: rand(0, Math.PI*2),
+    rotSpeed: rand(-0.01, 0.01),
+    img,
+    alpha: rand(0.4, 1),
+  };
+}
+
+function drawFlake(f){
+  ctx.save();
+  ctx.globalAlpha = f.alpha;
+  ctx.translate(f.x, f.y);
+  ctx.rotate(f.rot);
+  ctx.drawImage(f.img, -f.size/2, -f.size/2, f.size, f.size);
+  ctx.restore();
+}
+
+let wind = 0;
+let windTarget = 0;
+let windTimer = 0;
+let lastTime = performance.now();
+
+function animate(now){
+  const dt = now - lastTime;
+  lastTime = now;
+  ctx.clearRect(0,0,W,H);
+
+  // ปรับลมแบบสุ่ม
+  windTimer += dt;
+  if (windTimer > 1500){
+    windTimer = 0;
+    windTarget = rand(-CONFIG.windVariation, CONFIG.windVariation);
+  }
+  wind += (windTarget - wind) * 0.02;
+
+  for (let f of flakes){
+    f.y += f.speedY;
+    f.x += wind * f.size * 0.5; // ขนาดใหญ่รับลมแรงกว่า
+    f.rot += f.rotSpeed;
+
+    if (f.y > H + f.size){
+      f.y = -f.size;
+      f.x = rand(0, W);
+      f.speedY = rand(0.4, CONFIG.maxSpeedY);
+    }
+    drawFlake(f);
+  }
+
+  requestAnimationFrame(animate);
+}
+
+function start(){
+  resize();
+  requestAnimationFrame(animate);
+}
+
+// โหลดภาพทั้งหมดก่อนเริ่ม
+CONFIG.images.forEach(url=>{
+  const img = new Image();
+  img.src = url;
+  img.onload = ()=>{
+    snowImages.push(img);
+    imagesLoaded++;
+    if (imagesLoaded === CONFIG.images.length) start();
+  };
+});
+</script>
+	
 <link rel="stylesheet" href="index.css" media="screen">
     <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
     <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
