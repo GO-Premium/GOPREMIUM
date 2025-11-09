@@ -170,6 +170,80 @@ CONFIG.images.forEach(url=>{
   };
 });
 </script>
+
+	<!-- ======= SANTA CLAUS RUNNING EFFECT ======= -->
+<style>
+  /* ซานตาคลอสเป็นภาพลอยอยู่บนสุด */
+  #santa {
+    position: fixed;
+    bottom: 10%; /* ระดับความสูงจากขอบล่าง */
+    left: -200px; /* เริ่มนอกจอด้านซ้าย */
+    width: 180px;
+    height: auto;
+    z-index: 9999; /* ให้อยู่บนหิมะ */
+    pointer-events: none;
+    transition: transform 0.2s ease;
+  }
+</style>
+
+<!-- ภาพซานตาคลอส (ใช้ GIF โปร่งใส) -->
+<img id="santa" images/santa_run.gif " alt="Santa Running">
+
+<script>
+/* ==============================
+   ซานตาคลอสวิ่งไปมาแบบสุ่ม
+   ============================== */
+(function(){
+  const santa = document.getElementById('santa');
+  let screenW = window.innerWidth;
+
+  function runSanta(){
+    // สุ่มทิศทาง (left→right หรือ right→left)
+    const direction = Math.random() > 0.5 ? 'right' : 'left';
+    const startY = Math.random() * (window.innerHeight * 0.6) + window.innerHeight * 0.2; // สูงจากพื้นแบบสุ่ม
+    const speed = Math.random() * 4 + 6; // ความเร็ว (px ต่อ frame)
+    const santaWidth = santa.offsetWidth || 180;
+
+    santa.style.top = `${startY}px`;
+
+    if(direction === 'right'){
+      santa.style.transform = 'scaleX(1)'; // หันขวา
+      santa.style.left = `-${santaWidth}px`;
+      santa.style.right = 'auto';
+    } else {
+      santa.style.transform = 'scaleX(-1)'; // หันซ้าย
+      santa.style.right = `-${santaWidth}px`;
+      santa.style.left = 'auto';
+    }
+
+    let pos = direction === 'right' ? -santaWidth : screenW + santaWidth;
+
+    function move(){
+      if(direction === 'right') pos += speed;
+      else pos -= speed;
+
+      if(direction === 'right') santa.style.left = pos + 'px';
+      else santa.style.right = (screenW - pos) + 'px';
+
+      // ถ้าวิ่งพ้นจอ → หยุดและสุ่มใหม่
+      if((direction === 'right' && pos > screenW + santaWidth) ||
+         (direction === 'left' && pos < -santaWidth)){
+        clearInterval(timer);
+        // สุ่ม delay ก่อนวิ่งใหม่ (2-6 วินาที)
+        setTimeout(runSanta, Math.random() * 4000 + 2000);
+      }
+    }
+
+    const timer = setInterval(move, 30);
+  }
+
+  // เริ่มครั้งแรก
+  runSanta();
+
+  // อัปเดตขนาดหน้าจอเมื่อ resize
+  window.addEventListener('resize', ()=> screenW = window.innerWidth);
+})();
+</script>
 	
 <link rel="stylesheet" href="index.css" media="screen">
     <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
