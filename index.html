@@ -214,7 +214,7 @@ CONFIG.images.forEach(url=>{
     const img = document.createElement('img');
     img.src = flakes[Math.floor(Math.random() * flakes.length)];
     img.className = 'snow-particle';
-    const size = Math.random() * 30 + 3;
+    const size = Math.random() * 10 + 20;
     img.style.width = `${size}px`;
     img.style.left = `${x}px`;
     img.style.top = `${y}px`;
@@ -252,7 +252,7 @@ CONFIG.images.forEach(url=>{
       santa.style.left = `${pos}px`;
 
       // สร้างหิมะกระจายตามหลังซานต้า
-      if(Math.random() < 0.8){ // ความถี่ของหิมะกระจาย
+      if(Math.random() < 2 ){ // ความถี่ของหิมะกระจาย
         const rect = santa.getBoundingClientRect();
         createSnowTrail(rect.left + 20, rect.top + rect.height / 2);
       }
