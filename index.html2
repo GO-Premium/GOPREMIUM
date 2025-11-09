@@ -12,8 +12,271 @@
 การแจ้งเตือนเมื่อมีคอนเทนต์ใหม่ ไม่พลาดการอัปโหลดใหม่ ๆ ที่คุณสนใจ
 ฟังก์ชันซูม/ขยายวิดีโอ ดูรายละเอียดชัดเจนมากขึ้นได้ตามต้องการ
 ใช้งานได้กับอุปกรณ์หลากหลาย รองรับสมาร์ทโฟน แท็บเล็ต คอมพิวเตอร์ ทีวี และอีกมากมาย">
-    <title>Home</title>
-    
+    <title>GOPREMIUM</title>
+
+<style>
+  html,body{
+    height:100%;
+    margin:0;
+    background: linear-gradient(#0b1726, #102a45 70%);
+    color:#fff;
+    font-family: Inter, sans-serif;
+  }
+
+  /* Canvas เป็นพื้นหลัง */
+  #snow-canvas{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+  }
+
+  .content{
+    position:relative;
+    z-index:1;
+    text-align:center;
+    padding-top:20vh;
+  }
+
+  h1{
+    font-size:2.2rem;
+    letter-spacing:1px;
+  }
+  p{
+    color:#dbeaf8;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    #snow-canvas{ display:none; }
+  }
+</style>
+</head>
+<body>
+<canvas id="snow-canvas"></canvas>
+
+<script>
+// ============ CONFIG ============ //
+const CONFIG = {
+  flakesCountFactor: 0.0008, // ความหนาแน่น (ยิ่งมากยิ่งหนาแน่น)
+  gravity: 0.02,             // ความเร็วตก
+  windVariation: 0.08,       // ความผันผวนของลม
+  maxSpeedY: 2.0,
+  images: [
+    "images/snowflake1.png",
+    "images/snowflake2.png",
+    "images/snowflake3.png",
+  ], // ลิงก์ภาพเกล็ดหิมะ PNG โปร่งใส (ใช้ของคุณเองได้)
+  minSize: 3,
+  maxSize: 16,
+};
+
+// ============ SCRIPT ============ //
+const canvas = document.getElementById("snow-canvas");
+const ctx = canvas.getContext("2d");
+let W = innerWidth;
+let H = innerHeight;
+canvas.width = W;
+canvas.height = H;
+
+let flakes = [];
+let imagesLoaded = 0;
+let snowImages = [];
+
+function resize(){
+  W = innerWidth;
+  H = innerHeight;
+  canvas.width = W;
+  canvas.height = H;
+  const targetCount = Math.round(W * H * CONFIG.flakesCountFactor);
+  while (flakes.length < targetCount) flakes.push(makeFlake());
+  if (flakes.length > targetCount) flakes.length = targetCount;
+}
+
+window.addEventListener("resize", ()=> setTimeout(resize, 150));
+
+function rand(min,max){ return Math.random() * (max-min) + min; }
+
+function makeFlake(){
+  const img = snowImages[Math.floor(Math.random()*snowImages.length)];
+  const size = rand(CONFIG.minSize, CONFIG.maxSize);
+  return {
+    x: rand(0, W),
+    y: rand(-H, H),
+    size,
+    speedY: rand(0.4, CONFIG.maxSpeedY),
+    rot: rand(0, Math.PI*2),
+    rotSpeed: rand(-0.01, 0.01),
+    img,
+    alpha: rand(0.4, 1),
+  };
+}
+
+function drawFlake(f){
+  ctx.save();
+  ctx.globalAlpha = f.alpha;
+  ctx.translate(f.x, f.y);
+  ctx.rotate(f.rot);
+  ctx.drawImage(f.img, -f.size/2, -f.size/2, f.size, f.size);
+  ctx.restore();
+}
+
+let wind = 0;
+let windTarget = 0;
+let windTimer = 0;
+let lastTime = performance.now();
+
+function animate(now){
+  const dt = now - lastTime;
+  lastTime = now;
+  ctx.clearRect(0,0,W,H);
+
+  // ปรับลมแบบสุ่ม
+  windTimer += dt;
+  if (windTimer > 1500){
+    windTimer = 0;
+    windTarget = rand(-CONFIG.windVariation, CONFIG.windVariation);
+  }
+  wind += (windTarget - wind) * 0.02;
+
+  for (let f of flakes){
+    f.y += f.speedY;
+    f.x += wind * f.size * 0.5; // ขนาดใหญ่รับลมแรงกว่า
+    f.rot += f.rotSpeed;
+
+    if (f.y > H + f.size){
+      f.y = -f.size;
+      f.x = rand(0, W);
+      f.speedY = rand(0.4, CONFIG.maxSpeedY);
+    }
+    drawFlake(f);
+  }
+
+  requestAnimationFrame(animate);
+}
+
+function start(){
+  resize();
+  requestAnimationFrame(animate);
+}
+
+// โหลดภาพทั้งหมดก่อนเริ่ม
+CONFIG.images.forEach(url=>{
+  const img = new Image();
+  img.src = url;
+  img.onload = ()=>{
+    snowImages.push(img);
+    imagesLoaded++;
+    if (imagesLoaded === CONFIG.images.length) start();
+  };
+});
+</script>
+
+	<!-- ======= SANTA RUNNING TWO DIRECTIONS WITH SNOW TRAIL ======= -->
+<style>
+  #santa {
+    position: fixed;
+    bottom: 15%;
+    width: 180px;
+    height: auto;
+    z-index: 9999;
+    pointer-events: none;
+    transition: transform 0.3s linear;
+  }
+
+  .snow-particle {
+    position: fixed;
+    pointer-events: none;
+    will-change: transform, opacity;
+    z-index: 9998;
+    opacity: 0.8;
+  }
+</style>
+
+<img id="santa" src="images/santa_run_OR.gif" alt="Santa Running">
+
+<script>
+(function(){
+  const santa = document.getElementById('santa');
+  const flakes = [
+    "images/snowflake1.png",
+    "images/snowflake2.png",
+    "images/snowflake3.png"
+  ];
+
+  let screenW = window.innerWidth;
+  const santaW = 180;
+
+  // ฟังก์ชันสร้างเอฟเฟกต์หิมะกระจายหลังซานต้า
+  function createSnowTrail(x, y){
+    const img = document.createElement('img');
+    img.src = flakes[Math.floor(Math.random() * flakes.length)];
+    img.className = 'snow-particle';
+    const size = Math.random() * 10 + 10;
+    img.style.width = `${size}px`;
+    img.style.left = `${x}px`;
+    img.style.top = `${y}px`;
+    document.body.appendChild(img);
+
+    // การเคลื่อนไหวของหิมะ (สุ่มตกและกระจาย)
+    const driftX = (Math.random() - 0.5) * 100;
+    const driftY = Math.random() * 10 + 10;
+    const fadeTime = 1000 + Math.random() * 800;
+
+    const start = Date.now();
+    function animate(){
+      const t = (Date.now() - start) / fadeTime;
+      if(t >= 1){
+        img.remove();
+        return;
+      }
+      img.style.transform = `translate(${driftX * t}px, ${driftY * t}px) scale(${1 - t})`;
+      img.style.opacity = 1 - t;
+      requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+  }
+
+  // ฟังก์ชันให้ซานต้าวิ่งเข้าจากด้านซ้ายหรือขวาแบบสุ่ม
+  function runSanta(){
+    const fromLeft = Math.random() < 0.5; // 50% โอกาสเข้าจากซ้าย
+    const speed = Math.random() * 2 + 3;
+    const yPos = Math.random() * (window.innerHeight * 0.4) + window.innerHeight * 0.2;
+
+    let pos = fromLeft ? -santaW : screenW + santaW;
+    santa.style.top = `${yPos}px`;
+    santa.style.left = `${pos}px`;
+
+    // หันหน้าไปตามทิศทาง
+    santa.style.transform = fromLeft ? "scaleX(1)" : "scaleX(-1)";
+
+    function move(){
+      pos += fromLeft ? speed : -speed;
+      santa.style.left = `${pos}px`;
+
+      // หิมะกระจายตามหลังซานต้า
+      if(Math.random() < 1.2 ){
+        const rect = santa.getBoundingClientRect();
+        const xTrail = fromLeft ? rect.left + 20 : rect.right - 20;
+        const yTrail = rect.top + rect.height / 2;
+        createSnowTrail(xTrail, yTrail);
+      }
+
+      // ถ้าออกนอกจอแล้ว ให้เริ่มใหม่
+      if((fromLeft && pos > screenW + santaW) || (!fromLeft && pos < -santaW)){
+        clearInterval(timer);
+        // เริ่มใหม่แบบสุ่มหลังดีเลย์ 3–6 วิ
+        setTimeout(runSanta, Math.random() * 3000 + 3000);
+      }
+    }
+
+    const timer = setInterval(move, 30);
+  }
+
+  runSanta();
+  window.addEventListener('resize', ()=> screenW = window.innerWidth);
+})();
+</script>
+	
 <link rel="stylesheet" href="index.css" media="screen">
     <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
     <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
@@ -32,7 +295,7 @@
 		"name": "gopremium"
 }</script>
     <meta name="theme-color" content="#478ac9">
-    <meta property="og:title" content="Home">
+    <meta property="og:title" content="GOPREMIUM">
     <meta property="og:description" content="ยกระดับประสบการณ์ความบันเทิงของคุณ
 รับชมวิดีโอแบบไม่มีโฆษณาคั่น เพลิดเพลินกับการรับชมอย่างต่อเนื่อง ไม่สะดุด ไม่มีโฆษณารบกวน
 รับชมได้ทั้งออนไลน์และออฟไลน์ ไม่ต้องกังวลเรื่องเน็ตหมด – โหลดเก็บไว้ดูภายหลังได้ง่าย ๆ
@@ -44,8 +307,8 @@
 ใช้งานได้กับอุปกรณ์หลากหลาย รองรับสมาร์ทโฟน แท็บเล็ต คอมพิวเตอร์ ทีวี และอีกมากมาย">
     <meta property="og:type" content="website">
   <meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
-	
-	<!-- Google tag (gtag.js) -->
+
+<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=GT-K5224NZD"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -55,7 +318,7 @@
   gtag('config', 'GT-K5224NZD');
 </script>
 	
-  <body data-home-page="Home.html" data-home-page-title="Home" data-path-to-root="./" data-include-products="false" class="u-body u-clearfix u-xl-mode" data-lang="en"><header class="u-black u-clearfix u-header u-header" id="header"><div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+  <body data-home-page="GOPREMIUM.html" data-home-page-title="GOPREMIUM" data-path-to-root="./" data-include-products="false" class="u-body u-clearfix u-xl-mode" data-lang="en"><header class="u-black u-clearfix u-header u-header" id="header"><div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
         <p class="u-custom-font u-font-lato u-text u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="2000" data-animation-delay="0">GO PREMIUM</p>
       </div></header>
     <section class="u-clearfix u-section-1" id="block-1">
@@ -102,7 +365,6 @@
     
     
     
-    <section class="u-backlink u-clearfix u-grey-80"> This <a href="https://nicepage.com/html5-template">HTML5 Template</a> was created with Nicepage Website Builder 
-    </section>
+
   
 </body></html>
