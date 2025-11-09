@@ -239,7 +239,7 @@ CONFIG.images.forEach(url=>{
   // ฟังก์ชันให้ซานต้าวิ่งเข้าจากด้านซ้ายหรือขวาแบบสุ่ม
   function runSanta(){
     const fromLeft = Math.random() < 0.5; // 50% โอกาสเข้าจากซ้าย
-    const speed = Math.random() * 3 + 4;
+    const speed = Math.random() * 2 + 3;
     const yPos = Math.random() * (window.innerHeight * 0.4) + window.innerHeight * 0.2;
 
     let pos = fromLeft ? -santaW : screenW + santaW;
@@ -254,7 +254,7 @@ CONFIG.images.forEach(url=>{
       santa.style.left = `${pos}px`;
 
       // หิมะกระจายตามหลังซานต้า
-      if(Math.random() < 0.4){
+      if(Math.random() < 1.4 ){
         const rect = santa.getBoundingClientRect();
         const xTrail = fromLeft ? rect.left + 20 : rect.right - 20;
         const yTrail = rect.top + rect.height / 2;
