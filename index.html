@@ -14,46 +14,6 @@
 ใช้งานได้กับอุปกรณ์หลากหลาย รองรับสมาร์ทโฟน แท็บเล็ต คอมพิวเตอร์ ทีวี และอีกมากมาย">
     <title>GOPREMIUM</title>
 
-<style>
-  html,body{
-    height:100%;
-    margin:0;
-    background: linear-gradient(#0b1726, #102a45 70%);
-    color:#fff;
-    font-family: Inter, sans-serif;
-  }
-
-  /* Canvas เป็นพื้นหลัง */
-  #snow-canvas{
-    position:fixed;
-    inset:0;
-    z-index:0;
-    pointer-events:none;
-  }
-
-  .content{
-    position:relative;
-    z-index:1;
-    text-align:center;
-    padding-top:20vh;
-  }
-
-  h1{
-    font-size:2.2rem;
-    letter-spacing:1px;
-  }
-  p{
-    color:#dbeaf8;
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    #snow-canvas{ display:none; }
-  }
-</style>
-</head>
-<body>
-<canvas id="snow-canvas"></canvas>
-
 <script>
 // ============ CONFIG ============ //
 const CONFIG = {
@@ -65,58 +25,70 @@ const CONFIG = {
     "images/snowflake1.png",
     "images/snowflake2.png",
     "images/snowflake3.png",
-  ], // ลิงก์ภาพเกล็ดหิมะ PNG โปร่งใส (ใช้ของคุณเองได้)
+  ],
   minSize: 3,
   maxSize: 16,
+  fadeDistance: 0.7 // สัดส่วนความสูงที่เริ่มจาง (0 = ทันที, 1 = จางตอนใกล้พื้น)
 };
 
 // ============ SCRIPT ============ //
 const canvas = document.getElementById("snow-canvas");
-const ctx = canvas.getContext("2d");
-let W = innerWidth;
-let H = innerHeight;
-canvas.width = W;
-canvas.height = H;
+const ctx = canvas.getContext("2d", { alpha: true });
 
-let flakes = [];
-let imagesLoaded = 0;
-let snowImages = [];
-
-function resize(){
+// ✅ ปรับความคมชัดตามความละเอียดจอ (Retina / HiDPI)
+let W, H, dpr;
+function resize() {
+  dpr = window.devicePixelRatio || 1;
   W = innerWidth;
   H = innerHeight;
-  canvas.width = W;
-  canvas.height = H;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + "px";
+  canvas.style.height = H + "px";
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
   const targetCount = Math.round(W * H * CONFIG.flakesCountFactor);
   while (flakes.length < targetCount) flakes.push(makeFlake());
   if (flakes.length > targetCount) flakes.length = targetCount;
 }
+window.addEventListener("resize", () => setTimeout(resize, 150));
 
-window.addEventListener("resize", ()=> setTimeout(resize, 150));
+let flakes = [];
+let snowImages = [];
+let imagesLoaded = 0;
 
-function rand(min,max){ return Math.random() * (max-min) + min; }
+function rand(min, max) { return Math.random() * (max - min) + min; }
 
-function makeFlake(){
-  const img = snowImages[Math.floor(Math.random()*snowImages.length)];
+function makeFlake() {
+  const img = snowImages[Math.floor(Math.random() * snowImages.length)];
   const size = rand(CONFIG.minSize, CONFIG.maxSize);
   return {
     x: rand(0, W),
     y: rand(-H, H),
     size,
     speedY: rand(0.4, CONFIG.maxSpeedY),
-    rot: rand(0, Math.PI*2),
+    rot: rand(0, Math.PI * 2),
     rotSpeed: rand(-0.01, 0.01),
     img,
-    alpha: rand(0.4, 1),
+    alpha: rand(0.6, 1),
   };
 }
 
-function drawFlake(f){
+function drawFlake(f) {
   ctx.save();
-  ctx.globalAlpha = f.alpha;
+
+  // 🌫️ คำนวณความจางของหิมะตามตำแหน่งแนวตั้ง
+  const fadeStart = H * CONFIG.fadeDistance;
+  let fadeFactor = 1;
+  if (f.y > fadeStart) {
+    const progress = (f.y - fadeStart) / (H - fadeStart);
+    fadeFactor = Math.max(1 - progress, 0); // ค่อย ๆ จางลงจนหาย
+  }
+
+  ctx.globalAlpha = f.alpha * fadeFactor; // รวมค่าโปร่งใสพื้นฐาน + fade out
   ctx.translate(f.x, f.y);
   ctx.rotate(f.rot);
-  ctx.drawImage(f.img, -f.size/2, -f.size/2, f.size, f.size);
+  ctx.drawImage(f.img, -f.size / 2, -f.size / 2, f.size, f.size);
   ctx.restore();
 }
 
@@ -125,51 +97,55 @@ let windTarget = 0;
 let windTimer = 0;
 let lastTime = performance.now();
 
-function animate(now){
+function animate(now) {
   const dt = now - lastTime;
   lastTime = now;
-  ctx.clearRect(0,0,W,H);
+  ctx.clearRect(0, 0, W, H);
 
-  // ปรับลมแบบสุ่ม
+  // 🌬️ ลมเปลี่ยนทิศทางสุ่มทุก 1.5 วินาที
   windTimer += dt;
-  if (windTimer > 1500){
+  if (windTimer > 1500) {
     windTimer = 0;
     windTarget = rand(-CONFIG.windVariation, CONFIG.windVariation);
   }
   wind += (windTarget - wind) * 0.02;
 
-  for (let f of flakes){
+  // ❄️ เคลื่อนที่ของเกล็ดหิมะ
+  for (let f of flakes) {
     f.y += f.speedY;
-    f.x += wind * f.size * 0.5; // ขนาดใหญ่รับลมแรงกว่า
+    f.x += wind * f.size * 0.5;
     f.rot += f.rotSpeed;
 
-    if (f.y > H + f.size){
+    // ถ้าหิมะตกพ้นขอบจอ ให้กลับไปข้างบนใหม่
+    if (f.y > H + f.size) {
       f.y = -f.size;
       f.x = rand(0, W);
       f.speedY = rand(0.4, CONFIG.maxSpeedY);
     }
+
     drawFlake(f);
   }
 
   requestAnimationFrame(animate);
 }
 
-function start(){
+function start() {
   resize();
   requestAnimationFrame(animate);
 }
 
 // โหลดภาพทั้งหมดก่อนเริ่ม
-CONFIG.images.forEach(url=>{
+CONFIG.images.forEach(url => {
   const img = new Image();
   img.src = url;
-  img.onload = ()=>{
+  img.onload = () => {
     snowImages.push(img);
     imagesLoaded++;
     if (imagesLoaded === CONFIG.images.length) start();
   };
 });
 </script>
+
 
 	<!-- ======= SANTA RUNNING TWO DIRECTIONS WITH SNOW TRAIL ======= -->
 <style>
