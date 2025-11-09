@@ -14,6 +14,46 @@
 ใช้งานได้กับอุปกรณ์หลากหลาย รองรับสมาร์ทโฟน แท็บเล็ต คอมพิวเตอร์ ทีวี และอีกมากมาย">
     <title>GOPREMIUM</title>
 
+<style>
+  html,body{
+    height:100%;
+    margin:0;
+    background: linear-gradient(#0b1726, #102a45 70%);
+    color:#fff;
+    font-family: Inter, sans-serif;
+  }
+
+  /* Canvas เป็นพื้นหลัง */
+  #snow-canvas{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+  }
+
+  .content{
+    position:relative;
+    z-index:1;
+    text-align:center;
+    padding-top:20vh;
+  }
+
+  h1{
+    font-size:2.2rem;
+    letter-spacing:1px;
+  }
+  p{
+    color:#dbeaf8;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    #snow-canvas{ display:none; }
+  }
+</style>
+</head>
+<body>
+<canvas id="snow-canvas"></canvas>
+
 <script>
 // ============ CONFIG ============ //
 const CONFIG = {
@@ -145,7 +185,6 @@ CONFIG.images.forEach(url => {
   };
 });
 </script>
-
 
 	<!-- ======= SANTA RUNNING TWO DIRECTIONS WITH SNOW TRAIL ======= -->
 <style>
