@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html style="font-size: 16px;" lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="keywords" content="สมัครยูทูปพรีเมี่ยม,gopremium">
+  <meta name="description" content="ยกระดับประสบการณ์ความบันเทิงของคุณ\nรับชมวิดีโอแบบไม่มีโฆษณาคั่น\u000b เพลิดเพลินกับการรับชมอย่างต่อเนื่อง ไม่สะดุด ไม่มีโฆษณารบกวน\nรับชมได้ทั้งออนไลน์และออฟไลน์\u000b ไม่ต้องกังวลเรื่องเน็ตหมด – โหลดเก็บไว้ดูภายหลังได้ง่าย ๆ\nเสียงและภาพคุณภาพสูง\u000b ทั้งคมชัดและชัดเจน ให้คุณเต็มอิ่มกับทุกคอนเทนต์\nเลื่อนดู-ค้นหาส่วนที่ต้องการได้อย่างรวดเร็ว\u000b ฟีเจอร์เลื่อนไปยังช่วงโปรดของวิดีโอได้ทันใจ ไม่ต้องรอโหลด\nปุ่มควบคุมอัจฉริยะเพื่อความสะดวก\u000b เล่นต่ออัตโนมัติ หรือข้ามไปยังคลิปถัดไปได้ง่ายดาย\nการแจ้งเตือนเมื่อมีคอนเทนต์ใหม่\u000b ไม่พลาดการอัปโหลดใหม่ ๆ ที่คุณสนใจ\nฟังก์ชันซูม/ขยายวิดีโอ\u000b ดูรายละเอียดชัดเจนมากขึ้นได้ตามต้องการ\nใช้งานได้กับอุปกรณ์หลากหลาย\u000b รองรับสมาร์ทโฟน แท็บเล็ต คอมพิวเตอร์ ทีวี และอีกมากมาย">
+  <title>GOPREMIUM</title>
+
+  <!-- โหลด stylesheet และสคริปต์เดิมของหน้า -->
+  <link rel="stylesheet" href="index.css" media="screen">
+  <script class="u-script" type="text/javascript" src="jquery.js" defer></script>
+  <script class="u-script" type="text/javascript" src="nicepage.js" defer></script>
+  <meta name="generator" content="Nicepage 7.15.4, nicepage.com">
+
+  <!-- Google fonts -->
+  <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Roboto:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&amp;family=Honk:wght@400&amp;family=Mali:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&amp;family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900">
+
+  <script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "name": "gopremium"
+  }</script>
+  <meta name="theme-color" content="#478ac9">
+  <meta property="og:title" content="GOPREMIUM">
+  <meta property="og:description" content="ยกระดับประสบการณ์ความบันเทิงของคุณ\nรับชมวิดีโอแบบไม่มีโฆษณาคั่น\u000b เพลิดเพลินกับการรับชมอย่างต่อเนื่อง ไม่สะดุด ไม่มีโฆษณารบกวน\nรับชมได้ทั้งออนไลน์และออฟไลน์\u000b ไม่ต้องกังวลเรื่องเน็ตหมด – โหลดเก็บไว้ดูภายหลังได้ง่าย ๆ\n...">
+  <meta property="og:type" content="website">
+  <meta data-intl-tel-input-cdn-path="intlTelInput/">
+
+  <!-- ==========================
+       SNOW EFFECT STYLES
+       - เพิ่มสไตล์เพียงเล็กน้อยเพื่อให้ canvas อยู่ด้านหลังเนื้อหา
+       - canvas ถูกตั้ง pointer-events:none เพื่อไม่บล็อกการคลิก/สัมผัส
+       ========================== -->
+  <style>
+    /* แค่อัดสไตล์สำหรับ canvas หิมะ */
+    #snow-canvas{
+      position: fixed;        /* ให้อยู่คงที่เต็มหน้าจอ */
+      inset: 0;               /* top:0; right:0; bottom:0; left:0; */
+      z-index: 0;             /* ด้านหลังเนื้อหาเดิม (เนื้อหาควรมี z-index สูงกว่า) */
+      pointer-events: none;   /* ไม่รับอีเวนต์คลิก/ทัช */
+      opacity: 0.95;          /* ปรับความเข้ม/โปร่ง */
+    }
+
+    /* กรณีผู้ใช้ต้องการลดการเคลื่อนไหว ให้ซ่อน canvas */
+    @media (prefers-reduced-motion: reduce){
+      #snow-canvas{ display: none !important; }
+    }
+  </style>
+</head>
+
+<body data-home-page="GOPREMIUM.html" data-home-page-title="GOPREMIUM" data-path-to-root="./" data-include-products="false" class="u-body u-clearfix u-xl-mode" data-lang="en">
+
+  <!-- ==========================
+       INSERTED CANVAS FOR SNOW
+       - canvas นี้จะถูกวาดด้วย JavaScript (สามชั้น: back/mid/front)
+       - วางไว้บนสุดของ body แต่ z-index ต่ำเพื่อไม่บังเนื้อหา
+       ========================== -->
+  <canvas id="snow-canvas" aria-hidden="true"></canvas>
+
+  <!-- ====== (เดิม) Header และเนื้อหาเว็บของคุณ ====== -->
+  <header class="u-black u-clearfix u-header u-header" id="header"><div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+        <p class="u-custom-font u-font-lato u-text u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="2000" data-animation-delay="0">GO PREMIUM</p>
+      </div></header>
+    <section class="u-clearfix u-section-1" id="block-1">
+      <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-sheet-1">
+        <h2 class="u-align-center u-custom-font u-text u-text-custom-color-1 u-text-1" data-animation-name="customAnimationIn" data-animation-duration="2000" data-animation-delay="0">GOPREMI\u200bIUM </h2>
+      </div>
+    </section>
+    <section class="u-clearfix u-section-2" id="block-2">
+      <div class="u-clearfix u-sheet u-valign-middle-xl u-valign-middle-xs u-valign-top-lg u-valign-top-md u-valign-top-sm u-sheet-1">
+        <div class="custom-expanded u-video u-video-contain u-video-1" data-animation-name="customAnimationIn" data-animation-duration="3000" data-animation-delay="0" data-animation-out="0">
+          <div class="embed-responsive embed-responsive-1">
+            <iframe style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;" class="embed-responsive-item lazyload" frameborder="0" allowfullscreen="" data-src="https://www.youtube.com/embed/B5QLQYy3P2M?mute=0&amp;showinfo=0&amp;controls=0&amp;start=0" loading="lazy"></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="u-clearfix u-section-3" id="block-3">
+      <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-sm u-valign-middle-xs u-sheet-1">
+        <p class="u-align-center u-custom-font u-text u-text-1" data-animation-name="customAnimationIn" data-animation-duration="5000" data-animation-delay="0" data-animation-out="1">✅เริ่มต้นเพียง&nbsp;&nbsp;19&nbsp;บาทเท่านั้น ..!!<br>✅ รับชมวิดีโอแบบไม่มีโฆษณาคั่น<br>✅&nbsp;ใช้เมลของตัวเองสมัครได้เลย<br>✅ต่ออายุ<span style="font-weight: 400;"></span>เมลเดิมได้<br>✅สามารถเข้าใช้ได้กับทุกอุปกรณ์ IOS และ Android หรือ เปิดบนเว็บไซต์<br>
+          <br>สมัคร หรือ สอบถามข้อมูลเพิ่มเติม กดปุ่ม<br>แอดไลน์ด้านล่างได้เลย<br>👇👇👇
+        </p>
+      </div>
+    </section>
+    <section class="u-container-align-center u-section-4" id="block-4">
+      <div class="u-clearfix u-sheet u-valign-middle-md u-valign-middle-xs u-sheet-1">
+        <img class="infinite u-absolute-hcenter u-expanded-height u-image u-image-contain u-image-default u-preserve-proportions lazyload u-image-1" alt="" data-image-width="726" data-image-height="200" data-animation-name="customAnimationIn" data-animation-duration="2000" data-animation-delay="0" data-animation-direction="" data-href="https://line.me/R/ti/p/%40615yysio" data-src="images/d4322e92-223e-3768-cf00-bc6e5fb22222.png" loading="lazy">
+      </div>
+    </section>
+    <section class="u-clearfix u-section-5" id="block-5">
+      <div class="u-clearfix u-sheet u-sheet-1">
+        <p class="u-align-center u-custom-font u-text u-text-1" data-animation-name="customAnimationIn" data-animation-duration="5000" data-animation-delay="0" data-animation-out="1"> ✨ ยกระดับประสบการณ์ความบันเทิงของคุณ<br>
+          <br>✅ รับชมวิดีโอแบบไม่มีโฆษณาคั่น<br>เพลิดเพลินกับการรับชมอย่างต่อเนื่อง ไม่สะดุด ไม่มีโฆษณารบกวน<br>
+          <br>✅ รับชมได้ทั้งออนไลน์และออฟไลน์<br>ไม่ต้องกังวลเรื่องเน็ตหมด – โหลดเก็บไว้ดูภายหลังได้ง่าย ๆ<br>
+          <br>✅ เสียงและภาพคุณภาพสูง<br>ทั้งคมชัดและชัดเจน ให้คุณเต็มอิ่มกับทุกคอนเทนต์<br>
+          <br>✅ เลื่อนดู-ค้นหาส่วนที่ต้องการได้อย่างรวดเร็ว<br>ฟีเจอร์เลื่อนไปยังช่วงโปรดของวิดีโอได้ทันใจ ไม่ต้องรอโหลด<br>
+          <br>✅ ปุ่มควบคุมอัจฉริยะเพื่อความสะดวก<br>เล่นต่ออัตโนมัติ หรือข้ามไปยังคลิปถัดไปได้ง่ายดาย<br>
+          <br>✅ การแจ้งเตือนเมื่อมีคอนเทนต์ใหม่<br>ไม่พลาดการอัปโหลดใหม่ ๆ ที่คุณสนใจ<br>
+          <br>✅ ฟังก์ชันซูม/ขยายวิดีโอ<br>ดูรายละเอียดชัดเจนมากขึ้นได้ตามต้องการ<br>
+          <br>✅ ใช้งานได้กับอุปกรณ์หลากหลาย<br>รองรับสมาร์ทโฟน แท็บเล็ต คอมพิวเตอร์ ทีวี และอีกมากมาย
+        </p>
+      </div>
+    </section>
+
+  <!-- ส่วนท้ายเดิมของหน้า -->
+  <section class="u-backlink u-clearfix u-grey-80"> This <a href="https://nicepage.com/html5-template">HTML5 Template</a> was created with Nicepage Website Builder 
+  </section>
+
+
+  <!-- ==========================
+       SNOW EFFECT SCRIPT
+       - โค้ด JavaScript ด้านล่างนี้จะจัดการ:
+         1) โหลดภาพเกล็ดหิมะ (หลายรูป)
+         2) สร้าง 3 ชั้นของหิมะ (back, mid, front) เพื่อสร้างมิติ
+         3) ปรับขนาดอัตโนมัติรองรับ devicePixelRatio
+         4) เคารพ prefers-reduced-motion
+       - คำอธิบายเชิงคอมเมนต์จะอยู่ในโค้ดทุกส่วนเพื่อให้เข้าใจง่าย
+       ========================== -->
+  <script>
+  /* Immediately-Invoked Function Expression (IIFE) เพื่อไม่ให้ pollute global scope มากนัก */
+  (function(){
+    // ตรวจสอบ preference ของผู้ใช้: ถ้าผู้ใช้ต้องการลด motion ให้หยุด
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // เลือก canvas และ context
+    const canvas = document.getElementById('snow-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // CONFIGURATION: ปรับค่านี้ได้ตามชอบ
+    const CONFIG = {
+      // ลิงก์ภาพตัวอย่าง (แนะนำเปลี่ยนเป็นไฟล์ของคุณเอง เพื่อ performance ที่ดีกว่า)
+      images: [
+        'snowflake1.png',
+        'snowflake2.png',
+        'snowflake3.png'
+      ],
+      // กำหนดชั้นหิมะ 3 ชั้นเพื่อสร้างความลึก: แต่ละชั้นมีตัวคูณขนาดและความเร็ว
+      layers: [
+        { name: 'back', countFactor: 0.00025, sizeMul: 0.6, speedMul: 0.6, alpha: 0.6 },
+        { name: 'mid',  countFactor: 0.0005,  sizeMul: 1.0, speedMul: 1.0, alpha: 0.9 },
+        { name: 'front',countFactor: 0.00035, sizeMul: 1.6, speedMul: 1.7, alpha: 1.0 }
+      ],
+      baseMinSize: 12,   // ขนาดต่ำสุด (px) ของเม็ดหิมะฐาน
+      baseMaxSize: 56,   // ขนาดสูงสุด (px)
+      gravity: 0.02,     // ความเร่งลง
+      windVariation: 0.08, // ขอบเขตการเปลี่ยนแปลงลม
+      maxFPS: 60         // จำกัดเฟรมเพื่อประหยัดทรัพยากร (0 = no limit)
+    };
+
+    // ตัวแปรสถานะ
+    let DPR = Math.max(1, window.devicePixelRatio || 1);
+    let W = 0, H = 0;
+    let layers = [];         // เก็บอาร์เรย์เม็ดหิมะแยกตามชั้น
+    let images = [];         // เก็บ Image objects
+    let loadedImages = 0;
+
+    // ค่า wind ที่เปลี่ยนแบบนุ่มนวล
+    let wind = 0, windTarget = 0, windTimer = 0;
+
+    // FPS limiter
+    const fpsInterval = CONFIG.maxFPS > 0 ? 1000 / CONFIG.maxFPS : 0;
+    let lastTime = performance.now();
+    let acc = 0;
+
+    // ฟังก์ชันช่วยเหลือ: สุ่มค่า
+    function rand(min, max){ return Math.random() * (max - min) + min; }
+
+    // ปรับขนาด canvas ให้รองรับ DPR (เพื่อความคมบนจอ retina)
+    function resize(){
+      DPR = Math.max(1, window.devicePixelRatio || 1);
+      W = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+      H = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      canvas.width = Math.round(W * DPR);
+      canvas.height = Math.round(H * DPR);
+      // setTransform จะช่วยให้เราตีความพิกเซลในโค้ดเป็น CSS pixels แทน pixel ที่ขยายแล้ว
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+
+      // คำนวณจำนวนเม็ดหิมะใหม่ตามพื้นที่และ countFactor ของแต่ละชั้น
+      layers.forEach(layer => {
+        const target = Math.max(6, Math.round(W * H * layer.countFactor));
+        if (!layer.flakes) layer.flakes = [];
+        while (layer.flakes.length < target) layer.flakes.push(makeFlake(layer));
+        if (layer.flakes.length > target) layer.flakes.length = target;
+      });
+    }
+
+    // สร้างเม็ดหิมะตัวหนึ่งสำหรับชั้นที่กำหนด
+    function makeFlake(layer){
+      // เลือกรูปภาพแบบสุ่มจาก images ที่โหลดไว้
+      const img = images[Math.floor(Math.random() * images.length)];
+      // ขนาดของเม็ดหิมะผสมจาก base size และ multiplier ของชั้น
+      const size = rand(CONFIG.baseMinSize, CONFIG.baseMaxSize) * layer.sizeMul;
+      return {
+        x: rand(0, W),
+        y: rand(-H, H),
+        size,
+        speedY: rand(0.3, 1.0) * layer.speedMul, // ความเร็วลงแกว่งตามชั้น
+        rot: rand(0, Math.PI * 2),
+        rotSpeed: rand(-0.01, 0.01),
+        img,
+        alpha: rand(0.4, 1) * layer.alpha
+      };
+    }
+
+    // วาดเม็ดหิมะหนึ่งชิ้น
+    function drawFlake(f){
+      ctx.save();
+      ctx.globalAlpha = f.alpha;
+      ctx.translate(f.x, f.y);
+      ctx.rotate(f.rot);
+      // วาดรูปภาพเทียบขนาดกับ f.size
+      // use drawImage which is GPU-accelerated in many browsers
+      ctx.drawImage(f.img, -f.size/2, -f.size/2, f.size, f.size);
+      ctx.restore();
+    }
+
+    // อัปเดตฟิสิกส์ของเม็ดหิมะทั้งหมด
+    function update(dt){
+      // ปรับ wind target ทุก ๆ เวลาหนึ่งครั้ง (สุ่ม)
+      windTimer += dt;
+      if (windTimer > 1500){
+        windTimer = 0;
+        windTarget = rand(-CONFIG.windVariation, CONFIG.windVariation);
+      }
+      // เติมความนุ่มนวลให้การเปลี่ยนแปลงลม
+      wind += (windTarget - wind) * 0.02;
+
+      // วนแต่ละชั้นและอัปเดตเม็ดหิมะ
+      layers.forEach(layer => {
+        for (let f of layer.flakes){
+          // ความเร็วตาม gravity และขนาด
+          f.speedY += CONFIG.gravity * (f.size / 40) * (dt / 16.67);
+          // ตำแหน่งอัปเดต (ปรับตาม dt)
+          f.y += f.speedY * (dt / 16.67);
+          // ลมส่งผลต่อแกน x — ขนาดใหญ่จะรับลมมากกว่า (layer influence already baked)
+          f.x += wind * (f.size / 30) * (dt / 16.67);
+          f.rot += f.rotSpeed * (dt / 16.67);
+
+          // ถ้าเลยขอบล่างหรือออกข้าง ให้ recycle ขึ้นมาใหม่ด้านบน
+          if (f.y - f.size > H + 50 || f.x < -100 || f.x > W + 100){
+            Object.assign(f, makeFlake(layer));
+            f.y = -rand(2, 120);
+          }
+        }
+      });
+    }
+
+    // วาดทุกชั้น (back -> front)
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+      // วาดชั้นเรียงจากหลังไปหน้า
+      layers.forEach(layer => {
+        // ปรับ global alpha เพิ่มเติมถ้าต้องการ (ชั้นละค่า)
+        for (let f of layer.flakes) drawFlake(f);
+      });
+    }
+
+    // main loop พร้อม limiter FPS
+    function loop(now){
+      const dt = now - lastTime;
+      lastTime = now;
+      if (fpsInterval){
+        acc += dt;
+        if (acc < fpsInterval){
+          requestAnimationFrame(loop);
+          return;
+        }
+        // ถ้า acc มากเกิน ให้ส่ง dt เท่ากับ acc เพื่อประมวลผล
+        const toProcess = acc;
+        acc = 0;
+        update(toProcess);
+      } else {
+        update(dt);
+      }
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    // เริ่มต้นระบบเมื่อภาพทั้งหมดโหลด
+    function start(){
+      // สร้างโครงชั้นจาก CONFIG
+      layers = CONFIG.layers.map(l => ({ ...l, flakes: [] }));
+      resize();
+      lastTime = performance.now();
+      requestAnimationFrame(loop);
+      // expose ให้ debug ใน console ได้
+      window.__snow = { CONFIG, layers };
+    }
+
+    // โหลดภาพทั้งหมดก่อนเริ่ม
+    function preloadImages(urls, cb){
+      images = [];
+      loadedImages = 0;
+      if (!urls || !urls.length) { cb(); return; }
+      urls.forEach(url => {
+        const img = new Image();
+        // แนะนำใส่ crossorigin ถ้าภาพมาจาก CDN ที่รองรับ
+        img.crossOrigin = 'anonymous';
+        img.onload = ()=>{
+          images.push(img);
+          loadedImages++;
+          if (loadedImages === urls.length) cb();
+        };
+        img.onerror = ()=>{
+          // ถ้าภาพบางภาพโหลดไม่ได้ ให้ลด count และยังคงเริ่มเมื่อครบหรือเมื่อมีภาพอย่างน้อยหนึ่งภาพ
+          console.warn('Snow image failed to load:', url);
+          loadedImages++;
+          if (loadedImages === urls.length) cb();
+        };
+        img.src = url;
+      });
+    }
+
+    // listener resize (debounced)
+    let resizeTO;
+    window.addEventListener('resize', ()=>{ clearTimeout(resizeTO); resizeTO = setTimeout(resize, 120); });
+
+    // เริ่ม preload แล้ว start
+    preloadImages(CONFIG.images, ()=>{
+      // ถ้าไม่มีภาพสำเร็จ ให้ยกเลิก effect
+      if (!images.length){
+        console.warn('No snow images available — snow effect disabled.');
+        return;
+      }
+      start();
+    });
+
+  })();
+  </script>
+
+</body>
+</html>
