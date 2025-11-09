@@ -171,76 +171,103 @@ CONFIG.images.forEach(url=>{
 });
 </script>
 
-	<!-- ======= SANTA CLAUS RUNNING EFFECT ======= -->
+	<!-- ======= SANTA RUNNING WITH SNOW TRAIL ======= -->
 <style>
-  /* ซานตาคลอสเป็นภาพลอยอยู่บนสุด */
   #santa {
     position: fixed;
-    bottom: 10%; /* ระดับความสูงจากขอบล่าง */
-    left: -200px; /* เริ่มนอกจอด้านซ้าย */
+    bottom: 15%;
+    left: -200px;
     width: 180px;
     height: auto;
-    z-index: 9999; /* ให้อยู่บนหิมะ */
+    z-index: 9999;
     pointer-events: none;
-    transition: transform 0.2s ease;
+    transform: scaleX(1); /* หันไปข้างหน้า */
+  }
+
+  /* เอฟเฟกต์หิมะกระจายตามหลังซานต้า */
+  .snow-particle {
+    position: fixed;
+    pointer-events: none;
+    will-change: transform, opacity;
+    z-index: 9998;
+    opacity: 0.8;
   }
 </style>
 
-<!-- ภาพซานตาคลอส (ใช้ GIF โปร่งใส) -->
-<img id="santa" src = images/santa_run.gif " alt="Santa Running">
+<!-- ภาพซานต้าขี่เลื่อน -->
+<img id="santa" src="images/santa_run.gif" alt="Santa Running">
 
 <script>
-/* ==============================
-   ซานตาคลอสวิ่งไปมาแบบสุ่ม
-   ============================== */
 (function(){
   const santa = document.getElementById('santa');
+  const flakes = [
+    "images/snowflake1.png",
+    "images/snowflake2.png",
+    "images/snowflake3.png"
+  ];
+
   let screenW = window.innerWidth;
+  const santaW = 180;
 
-  function runSanta(){
-    // สุ่มทิศทาง (left→right หรือ right→left)
-    const direction = Math.random() > 0.5 ? 'right' : 'left';
-    const startY = Math.random() * (window.innerHeight * 0.6) + window.innerHeight * 0.2; // สูงจากพื้นแบบสุ่ม
-    const speed = Math.random() * 4 + 6; // ความเร็ว (px ต่อ frame)
-    const santaWidth = santa.offsetWidth || 180;
+  // ฟังก์ชันสร้างหิมะกระเด็นจากหลังซานต้า
+  function createSnowTrail(x, y){
+    const img = document.createElement('img');
+    img.src = flakes[Math.floor(Math.random() * flakes.length)];
+    img.className = 'snow-particle';
+    const size = Math.random() * 20 + 10;
+    img.style.width = `${size}px`;
+    img.style.left = `${x}px`;
+    img.style.top = `${y}px`;
+    document.body.appendChild(img);
 
-    santa.style.top = `${startY}px`;
+    // การเคลื่อนไหวของหิมะ
+    const driftX = (Math.random() - 0.5) * 100; // สุ่มทิศซ้ายขวา
+    const driftY = Math.random() * 50 + 50;     // ตกลงเล็กน้อย
+    const fadeTime = 1000 + Math.random() * 800;
 
-    if(direction === 'right'){
-      santa.style.transform = 'scaleX(1)'; // หันขวา
-      santa.style.left = `-${santaWidth}px`;
-      santa.style.right = 'auto';
-    } else {
-      santa.style.transform = 'scaleX(-1)'; // หันซ้าย
-      santa.style.right = `-${santaWidth}px`;
-      santa.style.left = 'auto';
+    const start = Date.now();
+    function animate(){
+      const t = (Date.now() - start) / fadeTime;
+      if(t >= 1){
+        img.remove();
+        return;
+      }
+      img.style.transform = `translate(${driftX * t}px, ${driftY * t}px) scale(${1 - t})`;
+      img.style.opacity = 1 - t;
+      requestAnimationFrame(animate);
     }
+    requestAnimationFrame(animate);
+  }
 
-    let pos = direction === 'right' ? -santaWidth : screenW + santaWidth;
+  // ฟังก์ชันให้ซานต้าเคลื่อนไปข้างหน้า
+  function runSanta(){
+    let pos = -santaW;
+    const speed = Math.random() * 3 + 4; // ความเร็วซานต้า
+    const yPos = Math.random() * (window.innerHeight * 0.4) + window.innerHeight * 0.2;
+    santa.style.top = `${yPos}px`;
+    santa.style.left = `${pos}px`;
 
     function move(){
-      if(direction === 'right') pos += speed;
-      else pos -= speed;
+      pos += speed;
+      santa.style.left = `${pos}px`;
 
-      if(direction === 'right') santa.style.left = pos + 'px';
-      else santa.style.right = (screenW - pos) + 'px';
+      // สร้างหิมะกระจายตามหลังซานต้า
+      if(Math.random() < 0.4){ // ความถี่ของหิมะกระจาย
+        const rect = santa.getBoundingClientRect();
+        createSnowTrail(rect.left + 20, rect.top + rect.height / 2);
+      }
 
-      // ถ้าวิ่งพ้นจอ → หยุดและสุ่มใหม่
-      if((direction === 'right' && pos > screenW + santaWidth) ||
-         (direction === 'left' && pos < -santaWidth)){
+      if(pos > screenW + santaW){
         clearInterval(timer);
-        // สุ่ม delay ก่อนวิ่งใหม่ (2-6 วินาที)
-        setTimeout(runSanta, Math.random() * 4000 + 2000);
+        // เริ่มใหม่หลังดีเลย์ 3-6 วิ
+        setTimeout(runSanta, Math.random() * 3000 + 3000);
       }
     }
 
     const timer = setInterval(move, 30);
   }
 
-  // เริ่มครั้งแรก
   runSanta();
-
-  // อัปเดตขนาดหน้าจอเมื่อ resize
   window.addEventListener('resize', ()=> screenW = window.innerWidth);
 })();
 </script>
