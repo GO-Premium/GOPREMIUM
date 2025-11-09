@@ -252,7 +252,7 @@ CONFIG.images.forEach(url=>{
       santa.style.left = `${pos}px`;
 
       // สร้างหิมะกระจายตามหลังซานต้า
-      if(Math.random() < 0.4){ // ความถี่ของหิมะกระจาย
+      if(Math.random() < 0.8){ // ความถี่ของหิมะกระจาย
         const rect = santa.getBoundingClientRect();
         createSnowTrail(rect.left + 20, rect.top + rect.height / 2);
       }
