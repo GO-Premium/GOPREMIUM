@@ -215,12 +215,12 @@ CONFIG.images.forEach(url => {
 
   .pack-particle {
     z-index: 9997;
-    width: 200px; /* ขนาดใหญ่ขึ้น */
+    width: 400px; /* ขนาดใหญ่ขึ้น */
   }
 
   .star-particle {
     z-index: 9996;
-    width: 60px;
+    width: 30px;
     opacity: 1;
   }
 
@@ -246,7 +246,7 @@ CONFIG.images.forEach(url => {
 
   const DISTANCE = {
     starX: -150,
-    starY: 50,
+    starY: 0,
     packX: -200, // ปรับให้ตรงกับขนาดใหญ่
     packY: 100
   };
@@ -262,7 +262,7 @@ CONFIG.images.forEach(url => {
       img.style.left = `${x}px`;
       img.style.top = `${y}px`;
       img.style.opacity = 1;
-      img.style.width = `${30 + Math.random()*5}px`;
+      img.style.width = `${30 + Math.random()*30}px`;
       document.body.appendChild(img);
 
       const angle = Math.random() * Math.PI*2;
