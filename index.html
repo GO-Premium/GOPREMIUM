@@ -197,7 +197,7 @@ CONFIG.images.forEach(url => {
 
 	<!-- ======= SANTA RUNNING TWO DIRECTIONS WITH SNOW TRAIL + PACK ======= -->
 <style>
-  #santa, #pack {
+  #santa {
     position: fixed;
     bottom: 15%;
     width: 180px;
@@ -208,8 +208,13 @@ CONFIG.images.forEach(url => {
   }
 
   #pack {
-    width: 120px; /* ขนาด pack ปรับได้ตามต้องการ */
-    z-index: 9997; /* ต่ำกว่า santa เล็กน้อย */
+    position: fixed;
+    bottom: 15%;
+    width: 400px; /* ปรับขนาดเป็น 400px */
+    height: auto;
+    z-index: 9997; /* ต่ำกว่า santa */
+    pointer-events: none;
+    transition: transform 0.3s linear;
   }
 
   .snow-particle {
@@ -280,12 +285,12 @@ CONFIG.images.forEach(url => {
       pos += fromLeft ? speed : -speed;
       santa.style.left = `${pos}px`;
 
-      // อัพเดต pack ให้ลอยตามซานต้า
+      // อัพเดต pack ให้ลอยตามซานต้า (ไม่กลับด้าน)
       const packX = fromLeft ? pos - packDistance : pos + packDistance;
-      const packY = yPos; // อยู่ในแนวเดียวกับซานต้า
+      const packY = yPos;
       pack.style.left = `${packX}px`;
       pack.style.top = `${packY}px`;
-      pack.style.transform = fromLeft ? "scaleX(1)" : "scaleX(-1)";
+      pack.style.transform = "scaleX(1)"; // pack ไม่กลับด้าน
 
       // หิมะกระจายตามซานต้า
       if(Math.random() < 1.2 ){
