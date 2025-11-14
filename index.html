@@ -246,9 +246,9 @@ CONFIG.images.forEach(url => {
 
   const DISTANCE = {
     starX: -150,
-    starY: 0,
+    starY: 50,
     packX: -200, // ปรับให้ตรงกับขนาดใหญ่
-    packY: 25
+    packY: 100
   };
 
   /* ================================
@@ -262,7 +262,7 @@ CONFIG.images.forEach(url => {
       img.style.left = `${x}px`;
       img.style.top = `${y}px`;
       img.style.opacity = 1;
-      img.style.width = `${30 + Math.random()*30}px`;
+      img.style.width = `${30 + Math.random()*5}px`;
       document.body.appendChild(img);
 
       const angle = Math.random() * Math.PI*2;
