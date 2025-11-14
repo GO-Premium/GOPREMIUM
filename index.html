@@ -252,39 +252,45 @@ CONFIG.images.forEach(url => {
   };
 
 /* ================================
-      STAR EXPLOSION (พลุจาก pack1.gif)
+      STAR EXPLOSION (พลุสมบูรณ์)
  ================================ */
 function createStarExplosionFromPack(){
-  if(!packImg) return; // ถ้า pack ยังไม่สร้าง ไม่ทำอะไร
+  if(!packImg) return;
 
   const rect = packImg.getBoundingClientRect();
   const centerX = rect.left + rect.width/2;
   const centerY = rect.top + rect.height/2;
 
-  const starCount = 20 + Math.floor(Math.random()*10); // ดาวจำนวนมากขึ้น
+  const starCount = 25 + Math.floor(Math.random()*15); // จำนวนดาวเยอะขึ้น
   for(let i=0; i<starCount; i++){
     const img = document.createElement('img');
     img.src = "images/star.png";
     img.className = 'star-particle';
     
-    const size = 10 + Math.random()*20; // ขนาดดาวสุ่ม
+    const size = 10 + Math.random()*20;
     img.style.width = `${size}px`;
     img.style.left = `${centerX}px`;
     img.style.top = `${centerY}px`;
     img.style.opacity = 1;
     document.body.appendChild(img);
 
-    const angle = Math.random() * Math.PI*2;       // ทิศทางวงกลม
-    const dist = 80 + Math.random()*100;          // ระยะกระจายใหญ่
-    const speed = 0.8 + Math.random()*0.8;        // ความเร็วแตกต่าง
-    const fadeTime = 800 + Math.random()*400;     // fade ออกช้า
+    const angle = Math.random() * Math.PI * 2;  // ทิศทางรอบวงกลม
+    const maxDist = 80 + Math.random() * 100;   // ระยะกระจาย
+    const fadeTime = 800 + Math.random() * 400;
 
     const start = Date.now();
     function animate(){
-      const t = (Date.now() - start)/fadeTime * speed;
-      if(t>=1){ img.remove(); return; }
-      img.style.transform = `translate(${Math.cos(angle)*dist*t}px, ${Math.sin(angle)*dist*t}px)`;
+      const elapsed = Date.now() - start;
+      const t = elapsed / fadeTime;
+      if(t >= 1){ img.remove(); return; }
+
+      // คำนวณ X,Y ให้เป็นวงกลมสมบูรณ์
+      const dx = Math.cos(angle) * maxDist * t;
+      const dy = Math.sin(angle) * maxDist * t;
+
+      img.style.transform = `translate(${dx}px, ${dy}px)`;
       img.style.opacity = 1 - t;
+
       requestAnimationFrame(animate);
     }
     requestAnimationFrame(animate);
