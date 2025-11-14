@@ -251,35 +251,42 @@ CONFIG.images.forEach(url => {
     packY: 0
   };
 
-  /* ================================
-        STAR EXPLOSION (ฟุ้งหลายทิศ)
-     ================================ */
-  function createStarExplosion(x, y){
-    for(let i=0; i<8; i++){
-      const img = document.createElement('img');
-      img.src = "images/star.png";
-      img.className = 'star-particle';
-      img.style.left = `${x}px`;
-      img.style.top = `${y}px`;
-      img.style.opacity = 1;
-      img.style.width = `${10 + Math.random()*10}px`;
-      document.body.appendChild(img);
+/* ================================
+      STAR EXPLOSION (ฟุ้งหลายทิศ) จาก pack1.gif
+ ================================ */
+function createStarExplosionFromPack(){
+  if(!packImg) return; // ถ้า pack ยังไม่สร้าง ไม่ทำอะไร
 
-      const angle = Math.random() * Math.PI*2;
-      const dist = 30 + Math.random()*50;
-      const fadeTime = 600 + Math.random()*400;
-      const start = Date.now();
+  const rect = packImg.getBoundingClientRect();
+  const centerX = rect.left + rect.width/2;
+  const centerY = rect.top + rect.height/2;
 
-      function animate(){
-        const t = (Date.now() - start)/fadeTime;
-        if(t>=1){ img.remove(); return; }
-        img.style.transform = `translate(${Math.cos(angle)*dist*t}px, ${Math.sin(angle)*dist*t}px)`;
-        img.style.opacity = 1 - t;
-        requestAnimationFrame(animate);
-      }
+  for(let i=0; i<8; i++){
+    const img = document.createElement('img');
+    img.src = "images/star.png";
+    img.className = 'star-particle';
+    img.style.left = `${centerX}px`;
+    img.style.top = `${centerY}px`;
+    img.style.opacity = 1;
+    img.style.width = `${10 + Math.random()*10}px`;
+    document.body.appendChild(img);
+
+    const angle = Math.random() * Math.PI*2;
+    const dist = 30 + Math.random()*50;
+    const fadeTime = 600 + Math.random()*400;
+    const start = Date.now();
+
+    function animate(){
+      const t = (Date.now() - start)/fadeTime;
+      if(t>=1){ img.remove(); return; }
+      img.style.transform = `translate(${Math.cos(angle)*dist*t}px, ${Math.sin(angle)*dist*t}px)`;
+      img.style.opacity = 1 - t;
       requestAnimationFrame(animate);
     }
+    requestAnimationFrame(animate);
   }
+}
+
 
   /* ================================
                PACK GIF (ลอยตาม)
@@ -357,10 +364,11 @@ CONFIG.images.forEach(url => {
 
       // สร้าง effects
       if(Math.random() < 1.2){
-        createStarExplosion(xTrail, yTrail);
-        createPackTrail(xTrail, yTrail);
-        createSnowTrail(xTrail, yTrail);
-      }
+  createStarExplosionFromPack(); // ดาวระเบิดจาก pack1.gif
+  createPackTrail(xTrail, yTrail);
+  createSnowTrail(xTrail, yTrail);
+		}
+
 
       if((fromLeft && pos > screenW + santaW) || (!fromLeft && pos < -santaW)){
         clearInterval(timer);
