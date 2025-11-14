@@ -289,16 +289,13 @@ CONFIG.images.forEach(url => {
 		const santaRect = santa.getBoundingClientRect();
 		let targetX;
 		
+		// ถ้าวิ่งจากซ้าย → ขวา ให้ pack อยู่ด้านซ้ายซานต้า 200px
 		if (fromLeft) {
 		  targetX = santaRect.left - packDistance - pack.offsetWidth;
-		} else {
+		} else { // ถ้าวิ่งจากขวา → ซ้าย ให้ pack อยู่ด้านขวาซานต้า 200px
 		  targetX = santaRect.right + packDistance;
 		}
-		
-		// ปรับให้ไม่เกินขอบจอ
-		targetX = Math.max(0, Math.min(targetX, window.innerWidth - pack.offsetWidth));
-		}
-		
+				
 		// Y อยู่ตรงกลางซานต้า
 		const targetY = santaRect.top + santaRect.height / 2 - pack.offsetHeight / 2;
 
