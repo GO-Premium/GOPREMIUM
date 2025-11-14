@@ -105,9 +105,6 @@ window.addEventListener("resize", () => setTimeout(resize, 150));
 let flakes = [];
 let snowImages = [];
 let imagesLoaded = 0;
-let packWidth = 400;
-	if (window.innerWidth < 600) packWidth = 200;
-	pack.style.width = packWidth + "px";
 
 function rand(min, max) { return Math.random() * (max - min) + min; }
 
