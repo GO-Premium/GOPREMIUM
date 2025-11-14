@@ -314,12 +314,23 @@ CONFIG.images.forEach(url => {
         const yTrail = santaRect.top + santaRect.height / 2;
         createSnowTrail(xTrail, yTrail);
       }
-
+		// fade-out ของ pack เฉพาะเมื่อถึงขอบจอ
+		const packRect = pack.getBoundingClientRect();
+		const nearEdge =
+		  packRect.left < 10 ||
+		  packRect.right > window.innerWidth - 10;
+		
+		// ถ้าใกล้ขอบ → ให้ pack จาง
+		if (nearEdge) {
+		  pack.style.opacity = Math.max(0, (parseFloat(pack.style.opacity) || 1) - 0.05);
+		} else {
+		  // ถ้าไม่ติดขอบ → ให้ชัดตามปกติ
+		  pack.style.opacity = Math.min(1, (parseFloat(pack.style.opacity) || 1) + 0.05);
+		}
       // fade out เมื่อซานต้าจะออกนอกจอ
       if((fromLeft && pos > screenW) || (!fromLeft && pos < 0)){
         const fadeStep = 0.05;
         santa.style.opacity -= fadeStep;
-        pack.style.opacity -= fadeStep;
         if(santa.style.opacity <= 0){
           // reset หลัง fade out
           setTimeout(runSanta, Math.random() * 3000 + 3000);
