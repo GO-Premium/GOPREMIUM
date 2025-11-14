@@ -252,7 +252,7 @@ CONFIG.images.forEach(url => {
   };
 
 /* ================================
-      STAR EXPLOSION (ฟุ้งหลายทิศ) จาก pack1.gif
+      STAR EXPLOSION (พลุจาก pack1.gif)
  ================================ */
 function createStarExplosionFromPack(){
   if(!packImg) return; // ถ้า pack ยังไม่สร้าง ไม่ทำอะไร
@@ -261,23 +261,27 @@ function createStarExplosionFromPack(){
   const centerX = rect.left + rect.width/2;
   const centerY = rect.top + rect.height/2;
 
-  for(let i=0; i<8; i++){
+  const starCount = 20 + Math.floor(Math.random()*10); // ดาวจำนวนมากขึ้น
+  for(let i=0; i<starCount; i++){
     const img = document.createElement('img');
     img.src = "images/star.png";
     img.className = 'star-particle';
+    
+    const size = 10 + Math.random()*20; // ขนาดดาวสุ่ม
+    img.style.width = `${size}px`;
     img.style.left = `${centerX}px`;
     img.style.top = `${centerY}px`;
     img.style.opacity = 1;
-    img.style.width = `${10 + Math.random()*10}px`;
     document.body.appendChild(img);
 
-    const angle = Math.random() * Math.PI*2;
-    const dist = 30 + Math.random()*50;
-    const fadeTime = 600 + Math.random()*400;
-    const start = Date.now();
+    const angle = Math.random() * Math.PI*2;       // ทิศทางวงกลม
+    const dist = 80 + Math.random()*100;          // ระยะกระจายใหญ่
+    const speed = 0.8 + Math.random()*0.8;        // ความเร็วแตกต่าง
+    const fadeTime = 800 + Math.random()*400;     // fade ออกช้า
 
+    const start = Date.now();
     function animate(){
-      const t = (Date.now() - start)/fadeTime;
+      const t = (Date.now() - start)/fadeTime * speed;
       if(t>=1){ img.remove(); return; }
       img.style.transform = `translate(${Math.cos(angle)*dist*t}px, ${Math.sin(angle)*dist*t}px)`;
       img.style.opacity = 1 - t;
@@ -286,6 +290,7 @@ function createStarExplosionFromPack(){
     requestAnimationFrame(animate);
   }
 }
+
 
 
   /* ================================
