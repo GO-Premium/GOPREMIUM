@@ -195,139 +195,31 @@ CONFIG.images.forEach(url => {
 });
 </script>
 
-	<!-- ======= SANTA RUNNING WITH CUSTOM TRAIL DISTANCE + STAR FADE ======= -->
-<style>
-  #santa {
-    position: fixed;
-    bottom: 15%;
-    width: 180px;
-    height: auto;
-    z-index: 9999;
-    pointer-events: none;
-    transition: transform 0.3s linear;
-  }
-
-  .snow-particle, .pack-particle, .star-particle {
-    position: fixed;
-    pointer-events: none;
-    will-change: transform, opacity;
-  }
-
-  .pack-particle {
-    z-index: 9997;
-    width: 400px; /* ขนาดใหญ่ขึ้น */
-  }
-
-  .star-particle {
-    z-index: 9996;
-    width: 60px;
-    opacity: 1;
-  }
-
-  .snow-particle {
-    z-index: 9995;
-    opacity: 0.9;
-  }
-</style>
-
-<img id="santa" src="images/santa_run_OR.gif" alt="Santa Running">
+<img id="pack-gif" src="images/pack1.gif" style="position:fixed; width:400px; height:auto; z-index:9997; pointer-events:none; opacity:0.9; display:none;">
 
 <script>
 (function(){
   const santa = document.getElementById('santa');
+  const packGif = document.getElementById('pack-gif');
   const flakes = [
     "images/snowflake1.png",
     "images/snowflake2.png",
     "images/snowflake3.png"
   ];
+  const starImg = "images/star.png"; // สำหรับระเบิดดาว
 
   let screenW = window.innerWidth;
   const santaW = 180;
 
-  const DISTANCE = {
-    starX: 0,
-    starY: 0,
-    packX: 0, // ปรับให้ตรงกับขนาดใหญ่
-    packY: 0
-  };
-
-/* ================================
-      STAR EXPLOSION (พลุสมบูรณ์)
- ================================ */
-function createStarExplosionFromPack(){
-  if(!packImg) return;
-
-  const rect = packImg.getBoundingClientRect();
-  const centerX = rect.left + rect.width/2;
-  const centerY = rect.top + rect.height/2;
-
-  const starCount = 25 + Math.floor(Math.random()*15); // จำนวนดาวเยอะขึ้น
-  for(let i=0; i<starCount; i++){
-    const img = document.createElement('img');
-    img.src = "images/star.png";
-    img.className = 'star-particle';
-    
-    const size = 10 + Math.random()*20;
-    img.style.width = `${size}px`;
-    img.style.left = `${centerX}px`;
-    img.style.top = `${centerY}px`;
-    img.style.opacity = 1;
-    document.body.appendChild(img);
-
-    const angle = Math.random() * Math.PI * 2;  // ทิศทางรอบวงกลม
-    const maxDist = 80 + Math.random() * 100;   // ระยะกระจาย
-    const fadeTime = 800 + Math.random() * 400;
-
-    const start = Date.now();
-    function animate(){
-      const elapsed = Date.now() - start;
-      const t = elapsed / fadeTime;
-      if(t >= 1){ img.remove(); return; }
-
-      // คำนวณ X,Y ให้เป็นวงกลมสมบูรณ์
-      const dx = Math.cos(angle) * maxDist * t;
-      const dy = Math.sin(angle) * maxDist * t;
-
-      img.style.transform = `translate(${dx}px, ${dy}px)`;
-      img.style.opacity = 1 - t;
-
-      requestAnimationFrame(animate);
-    }
-    requestAnimationFrame(animate);
-  }
-}
-
-
-
-  /* ================================
-               PACK GIF (ลอยตาม)
-     ================================ */
-  let packImg = null;
-  function createPackTrail(x, y){
-    if(!packImg){
-      packImg = document.createElement('img');
-      packImg.src = "images/pack1.gif";
-      packImg.className = 'pack-particle';
-      packImg.style.opacity = 1;
-      document.body.appendChild(packImg);
-    }
-    packImg.style.left = `${x + DISTANCE.packX}px`;
-    packImg.style.top = `${y + DISTANCE.packY}px`;
-  }
-
-  /* ================================
-               SNOW TRAIL
-     ================================ */
+  // ฟังก์ชันสร้างเอฟเฟกต์หิมะกระจายหลังซานต้า
   function createSnowTrail(x, y){
     const img = document.createElement('img');
     img.src = flakes[Math.floor(Math.random() * flakes.length)];
     img.className = 'snow-particle';
-    
     const size = Math.random() * 10 + 10;
     img.style.width = `${size}px`;
     img.style.left = `${x}px`;
     img.style.top = `${y}px`;
-
     document.body.appendChild(img);
 
     const driftX = (Math.random() - 0.5) * 100;
@@ -337,10 +229,7 @@ function createStarExplosionFromPack(){
     const start = Date.now();
     function animate(){
       const t = (Date.now() - start) / fadeTime;
-      if(t >= 1){
-        img.remove();
-        return;
-      }
+      if(t >= 1){ img.remove(); return; }
       img.style.transform = `translate(${driftX * t}px, ${driftY * t}px) scale(${1 - t})`;
       img.style.opacity = 1 - t;
       requestAnimationFrame(animate);
@@ -348,45 +237,65 @@ function createStarExplosionFromPack(){
     requestAnimationFrame(animate);
   }
 
-  /* ================================
-              MAIN MOVEMENT
-     ================================ */
+  // ฟังก์ชันสร้างเอฟเฟกต์ระเบิดดาวแบบพลุ
+  function createStarExplosion(x, y, count=20){
+    for(let i=0;i<count;i++){
+      const star = document.createElement('img');
+      star.src = starImg;
+      star.className = 'snow-particle';
+      const size = Math.random() * 20 + 10;
+      star.style.width = `${size}px`;
+      star.style.left = `${x}px`;
+      star.style.top = `${y}px`;
+      document.body.appendChild(star);
+
+      const angle = Math.random() * 2 * Math.PI;
+      const distance = Math.random() * 100 + 50;
+      const dx = Math.cos(angle) * distance;
+      const dy = Math.sin(angle) * distance;
+      const fadeTime = 800 + Math.random() * 400;
+
+      const start = Date.now();
+      function animate(){
+        const t = (Date.now() - start) / fadeTime;
+        if(t >= 1){ star.remove(); return; }
+        star.style.transform = `translate(${dx * t}px, ${dy * t}px) scale(${1 - t})`;
+        star.style.opacity = 1 - t;
+        requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+    }
+  }
+
   function runSanta(){
-    const fromLeft = Math.random() < 0.5;
+    const fromLeft = Math.random() < 0.5; 
     const speed = Math.random() * 2 + 3;
     const yPos = Math.random() * (window.innerHeight * 0.4) + window.innerHeight * 0.2;
 
     let pos = fromLeft ? -santaW : screenW + santaW;
-
     santa.style.top = `${yPos}px`;
     santa.style.left = `${pos}px`;
     santa.style.transform = fromLeft ? "scaleX(1)" : "scaleX(-1)";
-
-    // รีเซ็ต packImg
-    if(packImg){ packImg.remove(); packImg = null; }
+    
+    packGif.style.top = `${yPos}px`;
+    packGif.style.left = `${fromLeft ? pos - 200 : pos + 200}px`;
+    packGif.style.display = "block";
 
     function move(){
       pos += fromLeft ? speed : -speed;
       santa.style.left = `${pos}px`;
+      packGif.style.left = `${fromLeft ? pos - 200 : pos + 200}px`;
 
-      const rect = santa.getBoundingClientRect();
-      const xTrail = fromLeft ? rect.left : rect.right;
-      const yTrail = rect.top + rect.height / 2;
-
-      // สร้าง effects
-      if(Math.random() < 1.2){
-  createStarExplosionFromPack(); // ดาวระเบิดจาก pack1.gif
-  createPackTrail(xTrail, yTrail);
-  createSnowTrail(xTrail, yTrail);
-		}
-
+      if(Math.random() < 0.1){
+        const rect = packGif.getBoundingClientRect();
+        createStarExplosion(rect.left + rect.width/2, rect.top + rect.height/2);
+      }
 
       if((fromLeft && pos > screenW + santaW) || (!fromLeft && pos < -santaW)){
         clearInterval(timer);
         setTimeout(runSanta, Math.random() * 3000 + 3000);
       }
     }
-
     const timer = setInterval(move, 30);
   }
 
@@ -394,6 +303,7 @@ function createStarExplosionFromPack(){
   window.addEventListener('resize', ()=> screenW = window.innerWidth);
 })();
 </script>
+
 	
 <link rel="stylesheet" href="index.css" media="screen">
     <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
