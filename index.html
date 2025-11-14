@@ -261,45 +261,34 @@ CONFIG.images.forEach(url => {
   }
 
   // ฟังก์ชันให้ซานต้าวิ่งเข้าจากด้านซ้ายหรือขวาแบบสุ่ม
-(function(){
-  const santa = document.getElementById('santa');
-
-  // สร้าง GIF pack1.gif
-  const pack = document.createElement('img');
-  pack.src = "images/pack1.gif";
-  pack.style.width = "400px";
-  pack.style.position = "fixed";
-  pack.style.zIndex = 9998; // อยู่เหนือหิมะ แต่ยังอยู่ด้านหลังซานต้า
-  pack.style.pointerEvents = "none";
-  document.body.appendChild(pack);
-
-  let screenW = window.innerWidth;
-  const santaW = 180;
-  const offset = 200; // ระยะห่างด้านหลัง
-
   function runSanta(){
-    const fromLeft = Math.random() < 0.5;
+    const fromLeft = Math.random() < 0.5; // 50% โอกาสเข้าจากซ้าย
     const speed = Math.random() * 2 + 3;
     const yPos = Math.random() * (window.innerHeight * 0.4) + window.innerHeight * 0.2;
 
     let pos = fromLeft ? -santaW : screenW + santaW;
     santa.style.top = `${yPos}px`;
     santa.style.left = `${pos}px`;
-    santa.style.transform = fromLeft ? "scaleX(1)" : "scaleX(-1)";
 
-    let packPos = pos - (fromLeft ? offset : -offset); // ตำแหน่งเริ่มต้นของ pack
+    // หันหน้าไปตามทิศทาง
+    santa.style.transform = fromLeft ? "scaleX(1)" : "scaleX(-1)";
 
     function move(){
       pos += fromLeft ? speed : -speed;
       santa.style.left = `${pos}px`;
 
-      // Smooth follow (easing) ของ pack1.gif
-      packPos += ((pos - (fromLeft ? offset : -offset)) - packPos) * 0.1; // easing factor = 0.1
-      pack.style.left = `${packPos}px`;
-      pack.style.top = `${yPos}px`;
+      // หิมะกระจายตามหลังซานต้า
+      if(Math.random() < 1.2 ){
+        const rect = santa.getBoundingClientRect();
+        const xTrail = fromLeft ? rect.left + 20 : rect.right - 20;
+        const yTrail = rect.top + rect.height / 2;
+        createSnowTrail(xTrail, yTrail);
+      }
 
+      // ถ้าออกนอกจอแล้ว ให้เริ่มใหม่
       if((fromLeft && pos > screenW + santaW) || (!fromLeft && pos < -santaW)){
         clearInterval(timer);
+        // เริ่มใหม่แบบสุ่มหลังดีเลย์ 3–6 วิ
         setTimeout(runSanta, Math.random() * 3000 + 3000);
       }
     }
@@ -310,6 +299,7 @@ CONFIG.images.forEach(url => {
   runSanta();
   window.addEventListener('resize', ()=> screenW = window.innerWidth);
 })();
+</script>
 	
 <link rel="stylesheet" href="index.css" media="screen">
     <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
