@@ -215,8 +215,7 @@ CONFIG.images.forEach(url => {
 
   .pack-particle {
     z-index: 9997;
-    width: 50px;
-    opacity: 1;
+    width: 120px; /* ขนาดใหญ่ขึ้น */
   }
 
   .star-particle {
@@ -245,57 +244,58 @@ CONFIG.images.forEach(url => {
   let screenW = window.innerWidth;
   const santaW = 180;
 
-  /* ================================
-        CONFIG: ตั้งค่าระยะห่าง
-     ================================ */
   const DISTANCE = {
-    starX: -100,    // ระยะห่างด้านหลังซานต้า (แนวนอน)
-    starY:  0,    // ระยะจากกลางตัวซานต้า (แนวตั้ง)
-    packX: -100,
-    packY:  25
+    starX: -100,
+    starY: 0,
+    packX: -120, // ปรับให้ตรงกับขนาดใหญ่
+    packY: 25
   };
 
-
   /* ================================
-         STAR EXPLOSION (fade out)
+        STAR EXPLOSION (ฟุ้งหลายทิศ)
      ================================ */
   function createStarExplosion(x, y){
-    const img = document.createElement('img');
-    img.src = "images/star.png";
-    img.className = 'star-particle';
+    for(let i=0; i<8; i++){
+      const img = document.createElement('img');
+      img.src = "images/star.png";
+      img.className = 'star-particle';
+      img.style.left = `${x}px`;
+      img.style.top = `${y}px`;
+      img.style.opacity = 1;
+      img.style.width = `${30 + Math.random()*30}px`;
+      document.body.appendChild(img);
 
-    img.style.left = `${x + DISTANCE.starX}px`;
-    img.style.top = `${y + DISTANCE.starY}px`;
+      const angle = Math.random() * Math.PI*2;
+      const dist = 30 + Math.random()*50;
+      const fadeTime = 600 + Math.random()*400;
+      const start = Date.now();
 
-    img.style.transition = "opacity 0.8s linear";
-
-    document.body.appendChild(img);
-
-    // จางหาย
-    setTimeout(()=> img.style.opacity = 0, 150);
-    setTimeout(()=> img.remove(), 1000);
+      function animate(){
+        const t = (Date.now() - start)/fadeTime;
+        if(t>=1){ img.remove(); return; }
+        img.style.transform = `translate(${Math.cos(angle)*dist*t}px, ${Math.sin(angle)*dist*t}px)`;
+        img.style.opacity = 1 - t;
+        requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+    }
   }
-
 
   /* ================================
-               PACK GIF
+               PACK GIF (ลอยตาม)
      ================================ */
+  let packImg = null;
   function createPackTrail(x, y){
-    const img = document.createElement('img');
-    img.src = "images/pack1.gif";
-    img.className = 'pack-particle';
-
-    img.style.left = `${x + DISTANCE.packX}px`;
-    img.style.top = `${y + DISTANCE.packY}px`;
-
-    img.style.transition = "opacity 1s linear";
-
-    document.body.appendChild(img);
-
-    setTimeout(()=> img.style.opacity = 0, 200);
-    setTimeout(()=> img.remove(), 1200);
+    if(!packImg){
+      packImg = document.createElement('img');
+      packImg.src = "images/pack1.gif";
+      packImg.className = 'pack-particle';
+      packImg.style.opacity = 1;
+      document.body.appendChild(packImg);
+    }
+    packImg.style.left = `${x + DISTANCE.packX}px`;
+    packImg.style.top = `${y + DISTANCE.packY}px`;
   }
-
 
   /* ================================
                SNOW TRAIL
@@ -330,7 +330,6 @@ CONFIG.images.forEach(url => {
     requestAnimationFrame(animate);
   }
 
-
   /* ================================
               MAIN MOVEMENT
      ================================ */
@@ -345,18 +344,22 @@ CONFIG.images.forEach(url => {
     santa.style.left = `${pos}px`;
     santa.style.transform = fromLeft ? "scaleX(1)" : "scaleX(-1)";
 
+    // รีเซ็ต packImg
+    if(packImg){ packImg.remove(); packImg = null; }
+
     function move(){
       pos += fromLeft ? speed : -speed;
       santa.style.left = `${pos}px`;
 
       const rect = santa.getBoundingClientRect();
-      const xTrail = fromLeft ? rect.left : rect.right;  // ต้นทาง = ตัวซานต้า
+      const xTrail = fromLeft ? rect.left : rect.right;
       const yTrail = rect.top + rect.height / 2;
 
+      // สร้าง effects
       if(Math.random() < 1.2){
-        createStarExplosion(xTrail, yTrail);  // ดาวระเบิด
-        createPackTrail(xTrail, yTrail);      // gif pack1
-        createSnowTrail(xTrail, yTrail);      // หิมะ
+        createStarExplosion(xTrail, yTrail);
+        createPackTrail(xTrail, yTrail);
+        createSnowTrail(xTrail, yTrail);
       }
 
       if((fromLeft && pos > screenW + santaW) || (!fromLeft && pos < -santaW)){
@@ -367,7 +370,6 @@ CONFIG.images.forEach(url => {
 
     const timer = setInterval(move, 30);
   }
-
 
   runSanta();
   window.addEventListener('resize', ()=> screenW = window.innerWidth);
