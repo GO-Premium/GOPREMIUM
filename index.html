@@ -287,9 +287,14 @@ CONFIG.images.forEach(url => {
 
       // ตำแหน่ง pack (อยู่กลาง Y และตาม X แบบ easing)
       const santaRect = santa.getBoundingClientRect();
-      const targetX = fromLeft
-  		? pos - packDistance - pack.offsetWidth / 2 // pack อยู่หลังซานต้า
-  		: pos + packDistance - pack.offsetWidth / 2; // pack อยู่หลังซานต้า
+      let targetX;
+		if (fromLeft) {
+		  // ซานต้าจากซ้าย → pack อยู่ด้านหลังซานต้า
+		  targetX = pos - packDistance - pack.offsetWidth / 2 + santaW / 2;
+		} else {
+		  // ซานต้าจากขวา → pack อยู่ด้านหลังซานต้า
+		  targetX = pos + packDistance - santaW / 2 - pack.offsetWidth / 2;
+		}
       const targetY = yPos + santaRect.height / 2 - pack.offsetHeight / 2;
 
       // easing แบบ linear interpolation
