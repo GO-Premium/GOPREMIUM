@@ -105,6 +105,9 @@ window.addEventListener("resize", () => setTimeout(resize, 150));
 let flakes = [];
 let snowImages = [];
 let imagesLoaded = 0;
+let packWidth = 400;
+	if (window.innerWidth < 600) packWidth = 200;
+	pack.style.width = packWidth + "px";
 
 function rand(min, max) { return Math.random() * (max - min) + min; }
 
@@ -289,11 +292,14 @@ CONFIG.images.forEach(url => {
 		const santaRect = santa.getBoundingClientRect();
 		let targetX;
 		
-		// ถ้าวิ่งจากซ้าย → ขวา ให้ pack อยู่ด้านซ้ายซานต้า 200px
 		if (fromLeft) {
 		  targetX = santaRect.left - packDistance - pack.offsetWidth;
-		} else { // ถ้าวิ่งจากขวา → ซ้าย ให้ pack อยู่ด้านขวาซานต้า 200px
+		} else {
 		  targetX = santaRect.right + packDistance;
+		}
+		
+		// ปรับให้ไม่เกินขอบจอ
+		targetX = Math.max(0, Math.min(targetX, window.innerWidth - pack.offsetWidth));
 		}
 		
 		// Y อยู่ตรงกลางซานต้า
