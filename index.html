@@ -195,7 +195,7 @@ CONFIG.images.forEach(url => {
 });
 </script>
 
-	<!-- ======= SANTA RUNNING TWO DIRECTIONS WITH SNOW TRAIL + PACK ======= -->
+	<!-- ======= SANTA RUNNING TWO DIRECTIONS WITH SNOW TRAIL + PACK (Smooth + Fade) ======= -->
 <style>
   #santa {
     position: fixed;
@@ -203,16 +203,14 @@ CONFIG.images.forEach(url => {
     height: auto;
     z-index: 9999;
     pointer-events: none;
-    transition: transform 0.3s linear;
   }
 
   #pack {
     position: fixed;
-    width: 400px; /* ขนาด pack */
+    width: 400px;
     height: auto;
-    z-index: 9997; /* ต่ำกว่า santa */
+    z-index: 9997;
     pointer-events: none;
-    transition: transform 0.3s linear;
   }
 
   .snow-particle {
@@ -272,43 +270,59 @@ CONFIG.images.forEach(url => {
   function runSanta(){
     const fromLeft = Math.random() < 0.5;
     const speed = Math.random() * 2 + 3;
-
-    // วางซานต้าใน Y แบบสุ่ม
     const yPos = Math.random() * (window.innerHeight * 0.4) + window.innerHeight * 0.2;
     let pos = fromLeft ? -santaW : screenW + santaW;
+
     santa.style.top = `${yPos}px`;
     santa.style.left = `${pos}px`;
     santa.style.transform = fromLeft ? "scaleX(1)" : "scaleX(-1)";
+    santa.style.opacity = 1;
+    pack.style.opacity = 1;
 
-    function move(){
+    function animate(){
       pos += fromLeft ? speed : -speed;
+
+      // ตำแหน่งซานต้า
       santa.style.left = `${pos}px`;
 
-      // คำนวณตำแหน่ง pack ให้ตามซานต้าแบบสมมาตรและอยู่กลาง Y
+      // ตำแหน่ง pack (อยู่กลาง Y และตาม X แบบ easing)
       const santaRect = santa.getBoundingClientRect();
-      const packX = fromLeft 
+      const targetX = fromLeft 
         ? pos - packDistance - pack.offsetWidth / 2 + santaW / 2
         : pos + packDistance - santaW / 2 + pack.offsetWidth / 2;
-      const packY = yPos + santaRect.height / 2 - pack.offsetHeight / 2; // อยู่ตรงกลางแนว Y
-      pack.style.left = `${packX}px`;
-      pack.style.top = `${packY}px`;
-      pack.style.transform = "scaleX(1)"; // ไม่กลับด้าน
+      const targetY = yPos + santaRect.height / 2 - pack.offsetHeight / 2;
 
-      // หิมะกระจายตามซานต้า
-      if(Math.random() < 1.2 ){
+      // easing แบบ linear interpolation
+      const currentX = parseFloat(pack.style.left || targetX);
+      const currentY = parseFloat(pack.style.top || targetY);
+
+      pack.style.left = currentX + (targetX - currentX) * 0.1 + "px";
+      pack.style.top = currentY + (targetY - currentY) * 0.1 + "px";
+      pack.style.transform = "scaleX(1)"; // pack ไม่กลับด้าน
+
+      // หิมะตามซานต้า
+      if(Math.random() < 1.2){
         const xTrail = fromLeft ? santaRect.left + 20 : santaRect.right - 20;
         const yTrail = santaRect.top + santaRect.height / 2;
         createSnowTrail(xTrail, yTrail);
       }
 
-      // ถ้าออกนอกจอแล้ว ให้เริ่มใหม่
-      if((fromLeft && pos > screenW + santaW) || (!fromLeft && pos < -santaW)){
-        clearInterval(timer);
-        setTimeout(runSanta, Math.random() * 3000 + 3000);
+      // fade out เมื่อซานต้าจะออกนอกจอ
+      if((fromLeft && pos > screenW) || (!fromLeft && pos < 0)){
+        const fadeStep = 0.05;
+        santa.style.opacity -= fadeStep;
+        pack.style.opacity -= fadeStep;
+        if(santa.style.opacity <= 0){
+          // reset หลัง fade out
+          setTimeout(runSanta, Math.random() * 3000 + 3000);
+          return; // stop animate
+        }
       }
+
+      requestAnimationFrame(animate);
     }
 
-    const timer = setInterval(move, 30);
+    requestAnimationFrame(animate);
   }
 
   runSanta();
