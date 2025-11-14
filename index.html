@@ -199,7 +199,6 @@ CONFIG.images.forEach(url => {
 <style>
   #santa {
     position: fixed;
-    bottom: 15%;
     width: 180px;
     height: auto;
     z-index: 9999;
@@ -209,8 +208,7 @@ CONFIG.images.forEach(url => {
 
   #pack {
     position: fixed;
-    bottom: 15%;
-    width: 400px; /* ปรับขนาดเป็น 400px */
+    width: 400px; /* ขนาด pack */
     height: auto;
     z-index: 9997; /* ต่ำกว่า santa */
     pointer-events: none;
@@ -274,8 +272,9 @@ CONFIG.images.forEach(url => {
   function runSanta(){
     const fromLeft = Math.random() < 0.5;
     const speed = Math.random() * 2 + 3;
-    const yPos = Math.random() * (window.innerHeight * 0.4) + window.innerHeight * 0.2;
 
+    // วางซานต้าใน Y แบบสุ่ม
+    const yPos = Math.random() * (window.innerHeight * 0.4) + window.innerHeight * 0.2;
     let pos = fromLeft ? -santaW : screenW + santaW;
     santa.style.top = `${yPos}px`;
     santa.style.left = `${pos}px`;
@@ -285,18 +284,20 @@ CONFIG.images.forEach(url => {
       pos += fromLeft ? speed : -speed;
       santa.style.left = `${pos}px`;
 
-      // อัพเดต pack ให้ลอยตามซานต้า (ไม่กลับด้าน)
-      const packX = fromLeft ? pos - packDistance : pos + packDistance;
-      const packY = yPos;
+      // คำนวณตำแหน่ง pack ให้ตามซานต้าแบบสมมาตรและอยู่กลาง Y
+      const santaRect = santa.getBoundingClientRect();
+      const packX = fromLeft 
+        ? pos - packDistance - pack.offsetWidth / 2 + santaW / 2
+        : pos + packDistance - santaW / 2 + pack.offsetWidth / 2;
+      const packY = yPos + santaRect.height / 2 - pack.offsetHeight / 2; // อยู่ตรงกลางแนว Y
       pack.style.left = `${packX}px`;
       pack.style.top = `${packY}px`;
-      pack.style.transform = "scaleX(1)"; // pack ไม่กลับด้าน
+      pack.style.transform = "scaleX(1)"; // ไม่กลับด้าน
 
       // หิมะกระจายตามซานต้า
       if(Math.random() < 1.2 ){
-        const rect = santa.getBoundingClientRect();
-        const xTrail = fromLeft ? rect.left + 20 : rect.right - 20;
-        const yTrail = rect.top + rect.height / 2;
+        const xTrail = fromLeft ? santaRect.left + 20 : santaRect.right - 20;
+        const yTrail = santaRect.top + santaRect.height / 2;
         createSnowTrail(xTrail, yTrail);
       }
 
@@ -314,6 +315,7 @@ CONFIG.images.forEach(url => {
   window.addEventListener('resize', ()=> screenW = window.innerWidth);
 })();
 </script>
+	
 	
 <link rel="stylesheet" href="index.css" media="screen">
     <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
